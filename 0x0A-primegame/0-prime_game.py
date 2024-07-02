@@ -1,43 +1,38 @@
 #!/usr/bin/python3
-"""
-Prime Game Module
+"""Task 0. Prime Game module: Maria and Ben
 """
 
 
 def isWinner(x, nums):
+    """Determines the winner of a prime game session with `x` rounds.
     """
-    Prime Game Function
-    """
-    maria = 0
-    ben = 0
+    if x < 1 or not nums:
+        return None
 
-    def SieveOfEratosthenes(n):
-        """Sieve of Eratosthenes Function"""
+    # Determine maximum value in nums to know range for prime calculation
+    max_num = max(nums)
 
-        prime = [True for i in range(n + 1)]
-        pointer = 2
-        while pointer * pointer <= n:
-            if prime[pointer] == True:
-                for i in range(pointer * pointer, n + 1, pointer):
-                    prime[i] = False
-            pointer += 1
-        prime[0] = False
-        prime[1] = False
-        return prime
+    # Generate prime numbers up to max_num using Sieve of Eratosthenes
+    primes = [True] * (max_num + 1)
+    primes[0] = primes[1] = False  # 0 and 1 are not prime numbers
+    for i in range(2, int(max_num**0.5) + 1):
+        if primes[i]:
+            for j in range(i*i, max_num + 1, i):
+                primes[j] = False
 
-    max_n = max(nums)
-    primes = SieveOfEratosthenes(max_n)
+    marias_wins, bens_wins = 0, 0
 
-    for round in nums:
-        round_primes = [i for i in range(round + 1) if primes[i]]
-        if len(round_primes) % 2 == 0:
-            ben += 1
+    # Play x rounds of the game
+    for n in nums:
+        prime_count = sum(primes[2:n + 1])
+        if prime_count % 2 == 1:
+            marias_wins += 1
         else:
-            maria += 1
+            bens_wins += 1
 
-    if maria > ben:
+    if marias_wins > bens_wins:
         return "Maria"
-    elif ben > maria:
+    elif bens_wins > marias_wins:
         return "Ben"
-
-    return None
+    else:
+        return None
